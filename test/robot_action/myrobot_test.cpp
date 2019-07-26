@@ -103,19 +103,19 @@ TEST(MyRobot, StepPositions)
   myRobot.MoveToPosition(ep_cmd);
   std::this_thread::sleep_for(std::chrono::seconds(6));
   std::queue<double> steps = myRobotInterface.GetStepPositions();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
   EXPECT_EQ(steps.size(), 0);
@@ -128,13 +128,31 @@ TEST(MyRobot, StepPositions)
   myRobot.MoveToPosition(ep_cmd);
   std::this_thread::sleep_for(std::chrono::seconds(3));
   steps = myRobotInterface.GetStepPositions();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
-  EXPECT_TRUE(fabs(steps.back() - steps_expected.back()) < eps);
+  EXPECT_TRUE(fabs(steps.front() - steps_expected.front()) < eps);
   steps.pop();
   steps_expected.pop();
   EXPECT_EQ(steps.size(), 0);
+
+}
+
+TEST(MyRobot, InterruptMotion)
+{
+  MyRobot myRobot;
+  MyRobotInterface myRobotInterface(myRobot);
+  double eps = 0.1;
+
+  double ep_cmd1 = 5;
+  double ep_cmd2 = -1;
+  myRobot.MoveToPosition(ep_cmd1);
+  std::this_thread::sleep_for(std::chrono::seconds(3));
+  auto steps = myRobotInterface.GetStepPositions();
+  myRobot.MoveToPosition(ep_cmd2);
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+  auto ep_real = myRobotInterface.GetEndPosition();
+  EXPECT_TRUE(fabs(ep_real - ep_cmd2) < eps);
 
 }
 
