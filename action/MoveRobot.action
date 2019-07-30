@@ -1,0 +1,8 @@
+# Define the goal
+float32 command_position
+---
+# Define the result
+float32 end_position
+---
+# Define feedback
+float32 current_position
