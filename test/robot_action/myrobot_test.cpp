@@ -10,7 +10,7 @@
 #include <queue>
 #include <math.h>
 
-using namespace myrobot;
+using namespace robot_action;
 
 class MyRobotInterface
 {
@@ -52,13 +52,14 @@ public:
     std::swap(step_positions_, empty);
     end_position_ = 0;
   }
+
 private:
   MyRobot &myRobot_;
   std::queue<double> step_positions_;
   double end_position_;
 };
 
-TEST(MyRobot, DISABLED_ReachesPosition) // disabled, because too long. TODO : find better solution
+TEST(MyRobot, DISABLED_ReachesPosition) // disabled, because test takes too long. TODO : find better solution
 {
   MyRobot myRobot;
   MyRobotInterface myRobotInterface(myRobot);
