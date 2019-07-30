@@ -13,7 +13,7 @@
 #include <chrono>
 #include <thread>
 
-namespace myrobot{
+namespace robot_action{
 
 class MyRobot
 {
@@ -39,6 +39,7 @@ private:
   std::thread simulation_thread_;
   std::function<void(double)> step_callback_;
   std::function<void(double)> position_reached_callback_;
+  std::mutex mu_;
 
 };//class MyRobot
 

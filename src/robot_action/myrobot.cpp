@@ -11,7 +11,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace myrobot;
+using namespace robot_action;
 
 MyRobot::MyRobot():
     name_("Noname Robot"),
@@ -53,10 +53,11 @@ void MyRobot::SimulateMovement()
   const double resolution_ms = 10;
   int32_t tick_count = 0;
   std::stringstream ss;
-  std::mutex mu;
+
   do{
     std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(resolution_ms)));
-    mu.lock();
+
+    mu_.lock();
     double direction = commanded_position_ > current_position_ ? 1 : -1;
     current_position_ += direction*velocity_/1000*resolution_ms;
     if(++tick_count >= feedback_period_seconds_*1000/resolution_ms)
@@ -64,12 +65,14 @@ void MyRobot::SimulateMovement()
       step_callback_(current_position_);
       tick_count = 0;
     }
-    mu.unlock();
+    mu_.unlock();
+
   }while(fabs(commanded_position_ - current_position_) >= (velocity_/1000*resolution_ms));
-  mu.lock();
+
+  mu_.lock();
   position_reached_callback_(current_position_);
   commanding_active_ = false;
-  mu.unlock();
+  mu_.unlock();
 }
 
 void MyRobot::SetStepCallback(std::function<void(double)> callback)
